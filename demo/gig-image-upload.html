@@ -1,0 +1,332 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="stylesheet" href="../bower_components/components-font-awesome/css/font-awesome.css">
+<script src="../bower_components/i18next/i18next.js"></script>
+
+<dom-module id="gig-image-upload">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+            outline: none;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            height: 36px;
+            padding: 6px 15px;
+            font-size: 14px;
+            line-height: 1.57142857;
+            color: var(--input-color-primary, #76838f);
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid var(--input-border-color, #e4eaec);
+            border-radius: 3px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            @apply(--input-style);
+        }
+        input:focus {
+            border-color: var(--input-border-color-focus, #62a8ea);
+            outline: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(98, 168, 234, .6);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(98, 168, 234, .6);
+        }
+        input.focus,
+        input:focus {
+            border-color: var(--input-border-color-focus, #62a8ea);
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+        input::-moz-placeholder {
+            color: var(--input-color-placeholder, #a3afb7);
+            opacity: 1;
+        }
+        input:-ms-input-placeholder {
+            color: var(--input-color-placeholder, #a3afb7);
+        }
+        input::-webkit-input-placeholder {
+            color: var(--input-color-placeholder, #a3afb7);
+        }
+        input::-ms-expand {
+            background-color: transparent;
+            border: 0;
+        }
+
+        input.error {
+            border-color: var(--input-color-error, #f96868);
+        }
+
+        input[type=file] {
+            display: none;
+        }
+
+        .input-file {
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .input-file input {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .input-file button {
+            width: 36px;
+            border: 0;
+            height: 36px;
+            border-bottom-right-radius: 3px;
+            border-top-right-radius: 3px;
+            transition: border .2s linear,color .2s linear,width .2s linear,background-color .2s linear;
+            -webkit-transition: border .2s linear,color .2s linear,width .2s linear,background-color .2s linear;
+            color: white;
+            background-color: #46be8a;
+            border-color: #46be8a;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .input-file button:hover {
+            background-color: #5cd29d;
+            border-color: #5cd29d;
+        }
+
+
+
+        input.error {
+            border-color: var(--input-color-error, #f96868);
+        }
+
+        .error {
+            color: var(--input-color-error, #f96868);
+        }
+
+        div.error {
+            padding: 5px 0;
+        }
+
+        .small {
+            font-size: 85%;
+        }
+
+        .files {
+            padding: 10px 0;
+        }
+
+        .files .image {
+            display:inline-block;
+            position:relative;
+            margin: 0 5px;
+        }
+
+        .files .image:first-child {
+            margin-left: 0;
+        }
+
+        .files .image img {
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .files .image button {
+            border: 0;
+            background: transparent;
+            color: white;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+    </style>
+
+    <template>
+
+        <template is="dom-if" if="{{images.length}}">
+            <div class="files">
+                <template is="dom-repeat" items="{{images}}">
+                    <div class="image">
+                        <img src="{{item.image}}" height="100">
+                        <button on-click="deleteHandler" title="{{txtDeleteFile}}"><i class="fa fa-trash"></i>
+                    </div>
+                </template>
+
+            </div>
+        </template>
+
+        <div class="input-file" on-click="clickHandler">
+            <input type="text" placeholder="{{txtSelectFile}}" readonly class$="[[getClassList(errorMessage)]]">
+            <button><i class="fa fa-upload"></i></button>
+        </div>
+
+        <template is="dom-if" if="[[errorMessage]]">
+            <div class="error small">[[errorMessage]]</div>
+        </template>
+
+        <input
+            id="file"
+            on-change="addHandler"
+            type="file"
+            name$="[[name]]"
+            required$="[[required]]">
+
+        <template is="dom-if" if="{{typeformat('base64', type)}}">
+            <input type="hidden" name$="[[name]]" value="{{value}}">
+        </template>
+
+    </template>
+
+    <script>
+        (function() {
+
+            var self;
+
+            Polymer({
+                is: 'gig-image-upload',
+                ready: function() {
+                    self = this;
+                    i18n.init({
+                        lng: self.lang,
+                        resGetPath: '/locales/__lng__/__ns__.json'
+                    }, function() {
+                        self.txtSelectFile = i18n.t('selectFile');
+                        self.txtDeleteFile = i18n.t('deleteFile');
+                    });
+                },
+                getClassList: function(errorMessage) {
+                    var classList = '';
+
+                    if (errorMessage) {
+                        classList += 'error';
+                    }
+
+                    return classList;
+                },
+                deleteHandler: function(e) {
+                    this.splice('images', e.model.index,1);
+                    this._generateValue();
+                },
+                clickHandler: function() {
+                    var e = document.createEvent('MouseEvents');
+                    e.initEvent('click', true, false);
+                    this.$.file.dispatchEvent(e);
+                    this.errorMessage = null;
+                },
+                addHandler: function(e) {
+                    var f = e.target.files[0];
+
+                    if (!f) {
+                        return false;
+                    }
+
+                    if (this._checkSupport(f)) {
+                        this.error = false;
+                        this._uploadImage((e.srcElement || e.target).files[0]);
+                    } else {
+                        this.error = true;
+                        this.errorMessage = i18n.t('formatError') + this.formats;
+                    }
+                },
+                typeformat: function(value, type) {
+                    if (value === type) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                },
+                _uploadImage: function(file) {
+                    self = this;
+                    var reader = new FileReader();
+
+                    reader.onload = function(onLoadEvent) {
+
+                        if (!self.multiple) {
+                            self.images = [];
+                        }
+
+                        var object = {
+                            image: onLoadEvent.target.result,
+                            file: file
+                        }
+
+                        self.push('images', object);
+                        self._generateValue();
+
+                    };
+
+                    reader.onprogress = function() {
+                    };
+
+                    reader.readAsDataURL(file);
+                },
+                _generateValue: function() {
+
+                    if (self.type === 'base64') {
+                        self.value = self.images.join(',');
+                    }
+
+                },
+                _checkSupport: function(f) {
+                    var supportFormats = this.formats.split(',');
+                    var array = [];
+
+                    for (var i = 0; i < supportFormats.length; i++) {
+                        if (!f.type.match('image/'+supportFormats[i]+'*')) {
+                            array.push(1);
+                        } else {
+                            array.push(0);
+                        }
+                    }
+
+                    if (array.indexOf(0) === -1) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                },
+                properties: {
+                    lang: {
+                        type: String,
+                        value: 'en'
+                    },
+                    formats: {
+                        type: String,
+                        value: 'jpg,png'
+                    },
+                    images: {
+                        type: Array,
+                        value: function() { return []; },
+                        notify: true
+                    },
+                    multiple: {
+                        type: Boolean
+                    },
+                    type: {
+                        type: String,
+                        value: 'file'
+                    },
+                    value: {
+                        type: String,
+                        notify: true
+                    },
+                    values: {
+                        type: Array,
+                        value: function() { return []; },
+                        notify: true
+                    }
+                }
+            })
+        })();
+    </script>
+
+</dom-module>
