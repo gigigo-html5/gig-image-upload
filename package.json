@@ -4,7 +4,8 @@
   "description": "Component that generates an image upload",
   "main": "gruntfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "./node_modules/.bin/grunt release"
   },
   "repository": {
     "type": "git",
@@ -25,5 +26,9 @@
     "grunt-vulcanize": "^1.0.0",
     "karma": "~0.8.0"
   },
-  "homepage": "https://github.com/gigigo-html5/gig-image-upload"
+  "homepage": "https://github.com/gigigo-html5/gig-image-upload",
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13"
+  }
 }
