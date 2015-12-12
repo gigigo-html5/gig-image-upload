@@ -1,6 +1,6 @@
 {
   "name": "gig-image-upload",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Component that generates an image upload",
   "main": "gruntfile.js",
   "scripts": {
