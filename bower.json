@@ -1,6 +1,6 @@
 {
   "name": "gig-image-upload",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "https://github.com/gigigo-html5/gig-image-upload",
   "authors": [
     "Pedro Peña <pedro.jose@gigigo.com>"
@@ -14,8 +14,7 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "~1.0.9",
-    "components-font-awesome": "~4.4.0",
-    "i18next": "~1.10.2"
+    "polymer": "~1.2.0",
+    "components-font-awesome": "~4.5.0"
   }
 }

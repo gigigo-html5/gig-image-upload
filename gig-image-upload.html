@@ -1,13 +1,12 @@
 <!--
  Component that generates an image upload
- @version v0.0.2 - 2015-12-12
+ @version v0.0.4 - 2015-12-17
  @link https://github.com/gigigo-html5/gig-image-upload
  @author Pedro José Peña Jerez <pedro.jose@gigigo.com>
  @license MIT License, http://www.opensource.org/licenses/MIT
  -->
 <link rel="import" href="../polymer/polymer.html">
 <link rel="stylesheet" href="../components-font-awesome/css/font-awesome.css">
-<script src="../i18next/i18next.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
 <script>
   WebFont.load({
@@ -174,7 +173,7 @@
                 <template is="dom-repeat" items="{{images}}">
                     <div class="image">
                         <img src="{{item.image}}" height="100">
-                        <button on-click="deleteHandler" title="{{txtDeleteFile}}"><i class="fa fa-trash"></i>
+                        <button on-click="deleteHandler" title="[[txtDelete]]"><i class="fa fa-trash"></i>
                     </div>
                 </template>
 
@@ -212,13 +211,6 @@
                 is: 'gig-image-upload',
                 ready: function() {
                     self = this;
-                    i18n.init({
-                        lng: self.lang,
-                        resGetPath: '/locales/__lng__/__ns__.json'
-                    }, function() {
-                        self.txtSelectFile = i18n.t('selectFile');
-                        self.txtDeleteFile = i18n.t('deleteFile');
-                    });
                 },
                 getClassList: function(errorMessage) {
                     var classList = '';
@@ -312,10 +304,6 @@
                     }
                 },
                 properties: {
-                    lang: {
-                        type: String,
-                        value: 'en'
-                    },
                     formats: {
                         type: String,
                         value: 'jpg,png'
