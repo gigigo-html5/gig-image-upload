@@ -204,6 +204,10 @@
                 is: 'gig-image-upload',
                 ready: function() {
                     self = this;
+
+                    if (this.value) {
+                        this.push('images', {image: this.value});
+                    } 
                 },
                 getClassList: function(errorMessage) {
                     var classList = '';
