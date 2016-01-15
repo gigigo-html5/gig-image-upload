@@ -1,13 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="stylesheet" href="../bower_components/components-font-awesome/css/font-awesome.css">
-<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
-<script>
-  WebFont.load({
-    google: {
-      families: ['Roboto:300,400']
-    }
-  });
-</script>
+<link rel="stylesheet" href="../bower_components/components-font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="../bower_components/font-roboto/dist/styles/roboto.min.css">
 
 <dom-module id="gig-image-upload">
 
@@ -207,7 +200,7 @@
 
                     if (this.value) {
                         this.push('images', {image: this.value});
-                    } 
+                    }
                 },
                 getClassList: function(errorMessage) {
                     var classList = '';
@@ -221,6 +214,12 @@
                 deleteHandler: function(e) {
                     this.splice('images', e.model.index,1);
                     this._generateValue();
+
+                    self.src = null;
+                    self.fire('change');
+
+                    return false;
+
                 },
                 clickHandler: function() {
                     var e = document.createEvent('MouseEvents');
@@ -264,6 +263,10 @@
                             image: onLoadEvent.target.result,
                             file: file
                         }
+
+                        self.src = object.image;
+                        self.fire('change');
+
 
                         self.push('images', object);
                         self._generateValue();
@@ -325,6 +328,11 @@
                         type: Array,
                         value: function() { return []; },
                         notify: true
+                    },
+                    src: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true
                     }
                 }
             })
