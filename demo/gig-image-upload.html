@@ -158,7 +158,7 @@
             <div class="files">
                 <template is="dom-repeat" items="{{images}}">
                     <div class="image">
-                        <img src="{{item.image}}" height="100">
+                        <img src="[[getImage(item.image)]]" height="100">
                         <button on-click="deleteHandler" title="[[txtDelete]]"><i class="fa fa-trash"></i>
                     </div>
                 </template>
@@ -182,9 +182,7 @@
             name$="[[name]]"
             required$="[[required]]">
 
-        <template is="dom-if" if="{{typeformat('base64', type)}}">
-            <input type="hidden" name$="[[name]]" value="{{value}}">
-        </template>
+        <input type="hidden" name$="[[name]]" value="{{value}}">
 
     </template>
 
@@ -202,6 +200,12 @@
                         this.push('images', {image: this.value});
                     }
                 },
+                getImage: function(image) {
+                    if (image.indexOf('data:image') < 0)
+                    return this.route+image;
+                    else
+                    return image;
+                },
                 getClassList: function(errorMessage) {
                     var classList = '';
 
@@ -213,6 +217,7 @@
                 },
                 deleteHandler: function(e) {
                     this.splice('images', e.model.index,1);
+                    this.value = null;
                     this._generateValue();
 
                     self.src = null;
@@ -266,7 +271,6 @@
 
                         self.src = object.image;
                         self.fire('change');
-
 
                         self.push('images', object);
                         self._generateValue();
@@ -322,7 +326,8 @@
                     },
                     value: {
                         type: String,
-                        notify: true
+                        notify: true,
+                        reflectToAttribute: true
                     },
                     values: {
                         type: Array,
@@ -333,6 +338,10 @@
                         type: String,
                         notify: true,
                         reflectToAttribute: true
+                    },
+                    route: {
+                        type: String,
+                        notify: true
                     }
                 }
             })

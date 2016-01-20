@@ -1,6 +1,6 @@
 <!--
  Component that generates an image upload
- @version v0.0.6 - 2016-01-18
+ @version v0.0.7 - 2016-01-20
  @link https://github.com/gigigo-html5/gig-image-upload
  @author Pedro José Peña Jerez <pedro.jose@gigigo.com>
  @license MIT License, http://www.opensource.org/licenses/MIT
@@ -165,7 +165,7 @@
             <div class="files">
                 <template is="dom-repeat" items="{{images}}">
                     <div class="image">
-                        <img src="{{route}}{{item.image}}" height="100">
+                        <img src="[[getImage(item.image)]]" height="100">
                         <button on-click="deleteHandler" title="[[txtDelete]]"><i class="fa fa-trash"></i>
                     </div>
                 </template>
@@ -206,6 +206,12 @@
                     if (this.value) {
                         this.push('images', {image: this.value});
                     }
+                },
+                getImage: function(image) {
+                    if (image.indexOf('data:image') < 0)
+                    return this.route+image;
+                    else
+                    return image;
                 },
                 getClassList: function(errorMessage) {
                     var classList = '';
@@ -339,6 +345,10 @@
                         type: String,
                         notify: true,
                         reflectToAttribute: true
+                    },
+                    route: {
+                        type: String,
+                        notify: true
                     }
                 }
             })
