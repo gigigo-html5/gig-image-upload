@@ -1,6 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="stylesheet" href="../bower_components/components-font-awesome/css/font-awesome.min.css">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/gig-icon/gig-icon.html">
 <link rel="stylesheet" href="../bower_components/font-roboto/dist/styles/roboto.min.css">
+
 
 <dom-module id="gig-image-upload">
 
@@ -101,7 +103,9 @@
             border-color: #5cd29d;
         }
 
-
+        iron-icon {
+            width: 17px;
+        }
 
         input.error {
             border-color: var(--input-color-error, #f96868);
@@ -148,6 +152,13 @@
             right: 10px;
             font-size: 16px;
             cursor: pointer;
+            border-radius: 3px;
+            transition: border .2s linear,color .2s linear,width .2s linear,background-color .2s linear;
+            -webkit-transition: border .2s linear,color .2s linear,width .2s linear,background-color .2s linear;
+        }
+
+        .files .image button:hover {
+            background-color: rgba(0,0,0,0.6);
         }
 
     </style>
@@ -159,7 +170,7 @@
                 <template is="dom-repeat" items="{{images}}">
                     <div class="image">
                         <img src="[[getImage(item.image)]]" height="100">
-                        <button on-click="deleteHandler" title="[[txtDelete]]"><i class="fa fa-trash"></i>
+                        <button on-click="deleteHandler" title="[[txtDelete]]"><iron-icon icon="fa:trash"></iron-icon>
                     </div>
                 </template>
 
@@ -168,7 +179,7 @@
 
         <div class="input-file" on-click="clickHandler">
             <input type="text" placeholder="[[placeholder]]" readonly class$="[[getClassList(errorMessage)]]">
-            <button><i class="fa fa-upload"></i></button>
+            <button><iron-icon icon="fa:upload"></iron-icon></button>
         </div>
 
         <template is="dom-if" if="[[errorMessage]]">
