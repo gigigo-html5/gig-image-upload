@@ -1,6 +1,6 @@
 <!--
  Component that generates an image upload
- @version v0.0.9 - 2016-01-25
+ @version v0.0.10 - 2016-03-01
  @link https://github.com/gigigo-html5/gig-image-upload
  @author Pedro José Peña Jerez <pedro.jose@gigigo.com>
  @license MIT License, http://www.opensource.org/licenses/MIT
@@ -146,6 +146,7 @@
             border-radius: 3px;
             position: relative;
             overflow: hidden;
+            max-width: 100%;
         }
 
         .files .image button {
@@ -280,6 +281,11 @@
                             self.images = [];
                         }
 
+                        if (file.size > self.maxSize) {
+                            self.errorMessage = 'The file exceeds the allowed size. The maximum allowed is '+self.maxSize+' bytes';
+                            return false;
+                        }
+
                         var object = {
                             image: onLoadEvent.target.result,
                             file: file
@@ -358,6 +364,9 @@
                     route: {
                         type: String,
                         notify: true
+                    },
+                    maxSize: {
+                        type: Number
                     }
                 }
             })

@@ -139,6 +139,7 @@
             border-radius: 3px;
             position: relative;
             overflow: hidden;
+            max-width: 100%;
         }
 
         .files .image button {
@@ -273,6 +274,11 @@
                             self.images = [];
                         }
 
+                        if (file.size > self.maxSize) {
+                            self.errorMessage = 'The file exceeds the allowed size. The maximum allowed is '+self.maxSize+' bytes';
+                            return false;
+                        }
+
                         var object = {
                             image: onLoadEvent.target.result,
                             file: file
@@ -351,6 +357,9 @@
                     route: {
                         type: String,
                         notify: true
+                    },
+                    maxSize: {
+                        type: Number
                     }
                 }
             })
