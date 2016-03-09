@@ -1,6 +1,6 @@
 <!--
  Component that generates an image upload
- @version v0.0.10 - 2016-03-01
+ @version v0.0.11 - 2016-03-09
  @link https://github.com/gigigo-html5/gig-image-upload
  @author Pedro José Peña Jerez <pedro.jose@gigigo.com>
  @license MIT License, http://www.opensource.org/licenses/MIT
@@ -185,7 +185,7 @@
 
         <div class="input-file" on-click="clickHandler">
             <input type="text" placeholder="[[placeholder]]" readonly class$="[[getClassList(errorMessage)]]">
-            <button><iron-icon icon="fa:upload"></iron-icon></button>
+            <button type="button"><iron-icon icon="fa:upload"></iron-icon></button>
         </div>
 
         <template is="dom-if" if="[[errorMessage]]">
