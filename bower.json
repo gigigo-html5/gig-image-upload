@@ -14,7 +14,15 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "~1.2.0",
-    "gig-icon": "~0.0.1"
+    "polymer": "^1.6.0",
+    "gig-icon": "^0.1.1"
+  },
+  "devDependencies": {
+    "web-component-tester": "^4.2.2",
+    "iron-test-helpers": "^1.2.5",
+    "webcomponentsjs": "^0.7.22"
+  },
+  "resolutions": {
+    "polymer": "^1.6.0"
   }
 }
