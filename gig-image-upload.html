@@ -1,6 +1,6 @@
 <!--
  Component that generates an image upload
- @version v0.0.11 - 2016-07-21
+ @version v0.1.0 - 2016-07-21
  @link https://github.com/gigigo-html5/gig-image-upload
  @author Pedro José Peña Jerez <pedro.jose@gigigo.com>
  @license MIT License, http://www.opensource.org/licenses/MIT
@@ -13,211 +13,231 @@
 <link rel="import" href="gig-image-upload-style.html">
 
 <dom-module id="gig-image-upload">
-    <template>
+  <template>
 
-        <style include="gig-image-upload-style"></style>
+    <style include="gig-image-upload-style"></style>
 
-        <template is="dom-if" if="{{images.length}}">
-            <div class="files">
-                <template is="dom-repeat" items="{{images}}">
-                    <div class="image">
-                        <img src="[[getImage(item.image)]]" height="100">
-                        <button on-click="deleteHandler" title="[[txtDelete]]">
-                            <iron-icon icon="fa:trash"></iron-icon>
-                        </button>
-                    </div>
-                </template>
-            </div>
+    <template is="dom-if" if="{{images.length}}">
+      <div class="files">
+        <template is="dom-repeat" items="{{images}}">
+          <div class="image">
+            <img src="[[getImage(item.image)]]" height="100">
+            <button on-click="deleteHandler" title="[[txtDelete]]">
+              <iron-icon icon="fa:trash"></iron-icon>
+            </button>
+          </div>
         </template>
-
-        <div class="input-file" on-click="clickHandler">
-            <input type="text" placeholder="[[placeholder]]" readonly class$="[[getClassList(errorMessage)]]">
-            <button type="button"><iron-icon icon="fa:upload"></iron-icon></button>
-        </div>
-
-        <template is="dom-if" if="[[errorMessage]]">
-            <div class="error small">[[errorMessage]]</div>
-        </template>
-
-        <input
-            id="file"
-            on-change="addHandler"
-            type="file"
-            name$="[[name]]"
-            required$="[[required]]">
-
-        <input type="hidden" name$="[[name]]" value="{{value}}">
-
+      </div>
     </template>
 
-    <script>
-        (function() {
+    <div class="input-file" on-click="clickHandler">
+      <input type="text" placeholder="[[placeholder]]" readonly class$="[[getClassList(errorMessage)]]">
+      <button type="button">
+        <iron-icon icon="fa:upload"></iron-icon>
+      </button>
+    </div>
 
-            var self;
+    <template is="dom-if" if="[[errorMessage]]">
+      <div class="error small">[[errorMessage]]</div>
+    </template>
 
-            Polymer({
-                is: 'gig-image-upload',
-                ready: function() {
-                    self = this;
+    <input
+      id="file"
+      on-change="addHandler"
+      type="file"
+      name$="[[name]]"
+      required$="[[required]]">
 
-                    if (this.value) {
-                        this.push('images', {image: this.value});
-                    }
-                },
-                getImage: function(image) {
-                    if (image.indexOf('data:image') < 0)
-                    return this.route+image;
-                    else
-                    return image;
-                },
-                getClassList: function(errorMessage) {
-                    var classList = '';
+    <input type="hidden" name$="[[name]]" value="{{value}}">
 
-                    if (errorMessage) {
-                        classList += 'error';
-                    }
+  </template>
 
-                    return classList;
-                },
-                deleteHandler: function(e) {
-                    this.splice('images', e.model.index,1);
-                    this.value = null;
-                    this._generateValue();
+  <script>
+    (function() {
 
-                    self.src = null;
-                    self.fire('change');
+      var self;
 
-                    return false;
+      Polymer({
+        is: 'gig-image-upload',
+        ready: function() {
+          self = this;
 
-                },
-                clickHandler: function() {
-                    var e = document.createEvent('MouseEvents');
-                    e.initEvent('click', true, false);
-                    this.$.file.dispatchEvent(e);
-                    this.errorMessage = null;
-                },
-                addHandler: function(e) {
-                    var f = e.target.files[0];
+          if (this.value) {
+            this.push('images', {image: this.value});
+          }
+        },
+        getImage: function(image) {
+          if (image.indexOf('data:image') < 0)
+            return this.route + image;
+          else
+            return image;
+        },
+        getClassList: function(errorMessage) {
+          var classList = '';
 
-                    if (!f) {
-                        return false;
-                    }
+          if (errorMessage) {
+            classList += 'error';
+          }
 
-                    if (this._checkSupport(f)) {
-                        this.error = false;
-                        this._uploadImage((e.srcElement || e.target).files[0]);
-                    } else {
-                        this.error = true;
-                        this.errorMessage = i18n.t('formatError') + this.formats;
-                    }
-                },
-                typeformat: function(value, type) {
-                    if (value === type) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                },
-                _uploadImage: function(file) {
-                    self = this;
-                    var reader = new FileReader();
+          return classList;
+        },
+        deleteHandler: function(e) {
+          this.splice('images', e.model.index, 1);
+          this.value = null;
+          this._generateValue();
 
-                    reader.onload = function(onLoadEvent) {
+          self.src = null;
+          self.fire('change');
 
-                        if (!self.multiple) {
-                            self.images = [];
-                        }
+          return false;
 
-                        if (file.size > self.maxSize) {
-                            self.errorMessage = 'The file exceeds the allowed size. The maximum allowed is '+self.maxSize+' bytes';
-                            return false;
-                        }
+        },
+        clickHandler: function() {
+          var e = document.createEvent('MouseEvents');
+          e.initEvent('click', true, false);
+          this.$.file.dispatchEvent(e);
+          this.errorMessage = null;
+        },
+        addHandler: function(e) {
+          var f = e.target.files[0];
 
-                        var object = {
-                            image: onLoadEvent.target.result,
-                            file: file
-                        }
+          if (!f) {
+            return false;
+          }
 
-                        self.src = object.image;
-                        self.fire('change');
+          if (this._checkSupport(f)) {
+            this.error = false;
+            this._uploadImage((e.srcElement || e.target).files[0]);
+          } else {
+            this.error = true;
+            this.errorMessage = i18n.t('formatError') + this.formats;
+          }
+        },
+        typeformat: function(value, type) {
+          if (value === type) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        _uploadImage: function(file) {
+          self = this;
+          var reader = new FileReader();
 
-                        self.push('images', object);
-                        self._generateValue();
+          reader.onload = function(onLoadEvent) {
 
-                    };
+            if (!self.multiple) {
+              self.images = [];
+            }
 
-                    reader.onprogress = function() {
-                    };
+            if (file.size > self.maxSize) {
+              self.errorMessage = 'The file exceeds the allowed size. The maximum allowed is ' + self.maxSize + ' bytes';
+              return false;
+            }
 
-                    reader.readAsDataURL(file);
-                },
-                _generateValue: function() {
+            var object = {
+              image: onLoadEvent.target.result,
+              file: file
+            };
 
-                    if (self.type === 'base64') {
-                        self.value = self.images.join(',');
-                    }
+            self.src = object.image;
+            self.fire('change');
 
-                },
-                _checkSupport: function(f) {
-                    var supportFormats = this.formats.split(',');
-                    var array = [];
+            self.push('images', object);
+            self._generateValue();
 
-                    for (var i = 0; i < supportFormats.length; i++) {
-                        if (!f.type.match('image/'+supportFormats[i]+'*')) {
-                            array.push(1);
-                        } else {
-                            array.push(0);
-                        }
-                    }
+          };
 
-                    if (array.indexOf(0) === -1) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                },
-                properties: {
-                    formats: {
-                        type: String,
-                        value: 'jpg,png'
-                    },
-                    images: {
-                        type: Array,
-                        value: function() { return []; },
-                        notify: true
-                    },
-                    multiple: {
-                        type: Boolean
-                    },
-                    type: {
-                        type: String,
-                        value: 'file'
-                    },
-                    value: {
-                        type: String,
-                        notify: true,
-                        reflectToAttribute: true
-                    },
-                    values: {
-                        type: Array,
-                        value: function() { return []; },
-                        notify: true
-                    },
-                    src: {
-                        type: String,
-                        notify: true,
-                        reflectToAttribute: true
-                    },
-                    route: {
-                        type: String,
-                        notify: true
-                    },
-                    maxSize: {
-                        type: Number
-                    }
-                }
-            })
-        })();
-    </script>
+          reader.onprogress = function() {
+          };
+
+          reader.readAsDataURL(file);
+        },
+        _generateValue: function() {
+
+          if (self.type === 'base64') {
+            self.value = self.images.join(',');
+          }
+
+        },
+        _checkSupport: function(f) {
+          var supportFormats = this.formats.split(',');
+          var array = [];
+
+          for (var i = 0; i < supportFormats.length; i++) {
+            if (!f.type.match('image/' + supportFormats[i] + '*')) {
+              array.push(1);
+            } else {
+              array.push(0);
+            }
+          }
+
+          if (array.indexOf(0) === -1) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+        properties: {
+          formats: {
+            type: String,
+            value: 'jpg,png'
+          },
+          images: {
+            type: Array,
+            value: function() {
+              return [];
+            },
+            notify: true
+          },
+          multiple: {
+            type: Boolean
+          },
+          type: {
+            type: String,
+            value: 'file'
+          },
+          value: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          },
+          values: {
+            type: Array,
+            value: function() {
+              return [];
+            },
+            notify: true
+          },
+          src: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          },
+          route: {
+            type: String,
+            notify: true
+          },
+          maxSize: {
+            type: Number
+          },
+          placeholder: {
+            type: String,
+            value: ''
+          },
+          name: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          },
+          required: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          }
+        }
+      })
+    })();
+  </script>
 
 </dom-module>
