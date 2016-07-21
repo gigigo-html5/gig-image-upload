@@ -1,165 +1,172 @@
 <!--
  Component that generates an image upload
- @version v0.0.11 - 2016-07-21
+ @version v0.1.0 - 2016-07-21
  @link https://github.com/gigigo-html5/gig-image-upload
  @author Pedro José Peña Jerez <pedro.jose@gigigo.com>
  @license MIT License, http://www.opensource.org/licenses/MIT
 
  -->
 <dom-module id="gig-image-upload-style">
-    <template>
-        <style>
-            * {
-                box-sizing: border-box;
-                font-family: Roboto, sans-serif;
-                outline: none;
-            }
-            input {
-                display: block;
-                width: 100%;
-                height: 36px;
-                padding: 6px 15px;
-                font-size: 14px;
-                line-height: 1.57142857;
-                color: var(--input-color-primary, #76838f);
-                background: #fff none;
-                border: 1px solid var(--input-border-color, #e4eaec);
-                border-radius: 3px;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-                -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-                -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-                transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-                font-family: Roboto, sans-serif;
-                font-weight: 300;
-                @apply(--input-style);
-            }
-            input:focus {
-                border-color: var(--input-border-color-focus, #62a8ea);
-                outline: 0;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(98, 168, 234, .6);
-                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(98, 168, 234, .6);
-            }
-            input.focus,
-            input:focus {
-                border-color: var(--input-border-color-focus, #62a8ea);
-                -webkit-box-shadow: none;
-                box-shadow: none;
-            }
-            input::-moz-placeholder {
-                color: var(--input-color-placeholder, #a3afb7);
-                opacity: 1;
-            }
-            input:-ms-input-placeholder {
-                color: var(--input-color-placeholder, #a3afb7);
-            }
-            input::-webkit-input-placeholder {
-                color: var(--input-color-placeholder, #a3afb7);
-            }
-            input::-ms-expand {
-                background-color: transparent;
-                border: 0;
-            }
+  <template>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: Roboto, sans-serif;
+        outline: none;
+      }
 
-            input.error {
-                border-color: var(--input-color-error, #f96868);
-            }
+      input {
+        display: block;
+        width: 100%;
+        height: 36px;
+        padding: 6px 15px;
+        font-size: 14px;
+        line-height: 1.57142857;
+        color: var(--input-color-primary, #76838f);
+        background: #fff none;
+        border: 1px solid var(--input-border-color, #e4eaec);
+        border-radius: 3px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        font-family: Roboto, sans-serif;
+        font-weight: 300;
+        @apply(--input-style);
+      }
 
-            input[type=file] {
-                display: none;
-            }
+      input:focus {
+        border-color: var(--input-border-color-focus, #62a8ea);
+        outline: 0;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(98, 168, 234, .6);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(98, 168, 234, .6);
+      }
 
-            .input-file {
-                display: -webkit-flex;
-                -webkit-align-items: center;
-                display: flex;
-                align-items: center;
-                padding: 10px 0;
-            }
+      input.focus,
+      input:focus {
+        border-color: var(--input-border-color-focus, #62a8ea);
+        -webkit-box-shadow: none;
+        box-shadow: none;
+      }
 
-            .input-file input {
-                border-bottom-right-radius: 0;
-                border-top-right-radius: 0;
-            }
+      input::-moz-placeholder {
+        color: var(--input-color-placeholder, #a3afb7);
+        opacity: 1;
+      }
 
-            .input-file button {
-                width: 36px;
-                border: 0;
-                height: 36px;
-                border-bottom-right-radius: 3px;
-                border-top-right-radius: 3px;
-                transition: border .2s linear,color .2s linear,width .2s linear,background-color .2s linear;
-                -webkit-transition: border .2s linear,color .2s linear,width .2s linear,background-color .2s linear;
-                color: white;
-                background-color: #46be8a;
-                border-color: #46be8a;
-                cursor: pointer;
-                font-size: 14px;
-            }
+      input:-ms-input-placeholder {
+        color: var(--input-color-placeholder, #a3afb7);
+      }
 
-            .input-file button:hover {
-                background-color: #5cd29d;
-                border-color: #5cd29d;
-            }
+      input::-webkit-input-placeholder {
+        color: var(--input-color-placeholder, #a3afb7);
+      }
 
-            iron-icon {
-                width: 17px;
-            }
+      input::-ms-expand {
+        background-color: transparent;
+        border: 0;
+      }
 
-            input.error {
-                border-color: var(--input-color-error, #f96868);
-            }
+      input.error {
+        border-color: var(--input-color-error, #f96868);
+      }
 
-            .error {
-                color: var(--input-color-error, #f96868);
-            }
+      input[type=file] {
+        display: none;
+      }
 
-            div.error {
-                padding: 5px 0;
-            }
+      .input-file {
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+      }
 
-            .small {
-                font-size: 85%;
-            }
+      .input-file input {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+      }
 
-            .files {
-                padding: 10px 0;
-            }
+      .input-file button {
+        width: 36px;
+        border: 0;
+        height: 36px;
+        border-bottom-right-radius: 3px;
+        border-top-right-radius: 3px;
+        transition: border .2s linear, color .2s linear, width .2s linear, background-color .2s linear;
+        -webkit-transition: border .2s linear, color .2s linear, width .2s linear, background-color .2s linear;
+        color: white;
+        background-color: #46be8a;
+        border-color: #46be8a;
+        cursor: pointer;
+        font-size: 14px;
+      }
 
-            .files .image {
-                display:inline-block;
-                position:relative;
-                margin: 0 5px;
-            }
+      .input-file button:hover {
+        background-color: #5cd29d;
+        border-color: #5cd29d;
+      }
 
-            .files .image:first-child {
-                margin-left: 0;
-            }
+      iron-icon {
+        width: 17px;
+      }
 
-            .files .image img {
-                border-radius: 3px;
-                position: relative;
-                overflow: hidden;
-                max-width: 100%;
-            }
+      input.error {
+        border-color: var(--input-color-error, #f96868);
+      }
 
-            .files .image button {
-                border: 0;
-                background: transparent;
-                color: white;
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                font-size: 16px;
-                cursor: pointer;
-                border-radius: 3px;
-                transition: border .2s linear,color .2s linear,width .2s linear,background-color .2s linear;
-                -webkit-transition: border .2s linear,color .2s linear,width .2s linear,background-color .2s linear;
-            }
+      .error {
+        color: var(--input-color-error, #f96868);
+      }
 
-            .files .image button:hover {
-                background-color: rgba(0,0,0,0.6);
-            }
-        </style>
-    </template>
+      div.error {
+        padding: 5px 0;
+      }
+
+      .small {
+        font-size: 85%;
+      }
+
+      .files {
+        padding: 10px 0;
+      }
+
+      .files .image {
+        display: inline-block;
+        position: relative;
+        margin: 0 5px;
+      }
+
+      .files .image:first-child {
+        margin-left: 0;
+      }
+
+      .files .image img {
+        border-radius: 3px;
+        position: relative;
+        overflow: hidden;
+        max-width: 100%;
+      }
+
+      .files .image button {
+        border: 0;
+        background: transparent;
+        color: white;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: border .2s linear, color .2s linear, width .2s linear, background-color .2s linear;
+        -webkit-transition: border .2s linear, color .2s linear, width .2s linear, background-color .2s linear;
+      }
+
+      .files .image button:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+      }
+    </style>
+  </template>
 </dom-module>
