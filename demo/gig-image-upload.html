@@ -1,13 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="stylesheet" href="../bower_components/components-font-awesome/css/font-awesome.css">
-<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
-<script>
-  WebFont.load({
-    google: {
-      families: ['Roboto:300,400']
-    }
-  });
-</script>
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/gig-icon/gig-icon.html">
 
 <dom-module id="gig-image-upload">
 
@@ -108,7 +101,9 @@
             border-color: #5cd29d;
         }
 
-
+        iron-icon {
+            width: 17px;
+        }
 
         input.error {
             border-color: var(--input-color-error, #f96868);
@@ -144,6 +139,7 @@
             border-radius: 3px;
             position: relative;
             overflow: hidden;
+            max-width: 100%;
         }
 
         .files .image button {
@@ -155,6 +151,13 @@
             right: 10px;
             font-size: 16px;
             cursor: pointer;
+            border-radius: 3px;
+            transition: border .2s linear,color .2s linear,width .2s linear,background-color .2s linear;
+            -webkit-transition: border .2s linear,color .2s linear,width .2s linear,background-color .2s linear;
+        }
+
+        .files .image button:hover {
+            background-color: rgba(0,0,0,0.6);
         }
 
     </style>
@@ -165,8 +168,8 @@
             <div class="files">
                 <template is="dom-repeat" items="{{images}}">
                     <div class="image">
-                        <img src="{{item.image}}" height="100">
-                        <button on-click="deleteHandler" title="[[txtDelete]]"><i class="fa fa-trash"></i>
+                        <img src="[[getImage(item.image)]]" height="100">
+                        <button on-click="deleteHandler" title="[[txtDelete]]"><iron-icon icon="fa:trash"></iron-icon>
                     </div>
                 </template>
 
@@ -175,7 +178,7 @@
 
         <div class="input-file" on-click="clickHandler">
             <input type="text" placeholder="[[placeholder]]" readonly class$="[[getClassList(errorMessage)]]">
-            <button><i class="fa fa-upload"></i></button>
+            <button type="button"><iron-icon icon="fa:upload"></iron-icon></button>
         </div>
 
         <template is="dom-if" if="[[errorMessage]]">
@@ -189,9 +192,7 @@
             name$="[[name]]"
             required$="[[required]]">
 
-        <template is="dom-if" if="{{typeformat('base64', type)}}">
-            <input type="hidden" name$="[[name]]" value="{{value}}">
-        </template>
+        <input type="hidden" name$="[[name]]" value="{{value}}">
 
     </template>
 
@@ -207,7 +208,13 @@
 
                     if (this.value) {
                         this.push('images', {image: this.value});
-                    } 
+                    }
+                },
+                getImage: function(image) {
+                    if (image.indexOf('data:image') < 0)
+                    return this.route+image;
+                    else
+                    return image;
                 },
                 getClassList: function(errorMessage) {
                     var classList = '';
@@ -220,7 +227,14 @@
                 },
                 deleteHandler: function(e) {
                     this.splice('images', e.model.index,1);
+                    this.value = null;
                     this._generateValue();
+
+                    self.src = null;
+                    self.fire('change');
+
+                    return false;
+
                 },
                 clickHandler: function() {
                     var e = document.createEvent('MouseEvents');
@@ -260,10 +274,18 @@
                             self.images = [];
                         }
 
+                        if (file.size > self.maxSize) {
+                            self.errorMessage = 'The file exceeds the allowed size. The maximum allowed is '+self.maxSize+' bytes';
+                            return false;
+                        }
+
                         var object = {
                             image: onLoadEvent.target.result,
                             file: file
                         }
+
+                        self.src = object.image;
+                        self.fire('change');
 
                         self.push('images', object);
                         self._generateValue();
@@ -319,12 +341,25 @@
                     },
                     value: {
                         type: String,
-                        notify: true
+                        notify: true,
+                        reflectToAttribute: true
                     },
                     values: {
                         type: Array,
                         value: function() { return []; },
                         notify: true
+                    },
+                    src: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true
+                    },
+                    route: {
+                        type: String,
+                        notify: true
+                    },
+                    maxSize: {
+                        type: Number
                     }
                 }
             })

@@ -9,12 +9,37 @@
     <link rel="import" href="/demo/gig-image-upload.html">
 
     <style is="custom-style">
+        .field {
+            margin: 10px
+        }
+
+        .field label {
+            display: block;
+            font-family: arial, sans-serif;
+        }
 
 
     </style>
 </head>
 <body>
-    <gig-image-upload multiple="true"></gig-image-upload>
+    <div class="field">
+        <label>File Upload</label>
+        <gig-image-upload></gig-image-upload>
+    </div>
+
+    <div class="field">
+        <label>File Upload with max size</label>
+        <gig-image-upload max-size="20000000000000" formats="jpg,png,gif"></gig-image-upload>
+    </div>
+
+    <script>
+        var imageUpload = document.querySelector('gig-image-upload');
+
+        imageUpload.addEventListener('change', function() {
+            console.log(imageUpload.src);
+        })
+
+    </script>
 </body>
 
 </html>
