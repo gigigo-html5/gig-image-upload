@@ -27,9 +27,14 @@
         <gig-image-upload></gig-image-upload>
     </div>
 
-    <div class="field">
+    <div class="field" accept="'audio/*,video/*,image/*'">
         <label>File Upload with max size</label>
         <gig-image-upload max-size="20000000000000" formats="jpg,png,gif"></gig-image-upload>
+    </div>
+
+    <div class="field">
+        <label>Can select all sound files, video and image</label>
+        <gig-image-upload accept="audio/*,video/*,image/*"></gig-image-upload>
     </div>
 
     <script>
