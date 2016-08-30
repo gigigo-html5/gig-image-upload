@@ -38,8 +38,8 @@
       on-change="addHandler"
       type="file"
       name$="[[name]]"
-      required$="[[required]]">
-
+      required$="[[required]]"
+      accept$="[[accept]]">
     <input type="hidden" name$="[[name]]" value="{{value}}">
 
   </template>
@@ -221,6 +221,10 @@
             type: String,
             notify: true,
             reflectToAttribute: true
+          },
+          accept: {
+            type: String,
+            value: null
           },
           required: {
             type: Boolean,
